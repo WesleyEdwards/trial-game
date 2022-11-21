@@ -1,6 +1,5 @@
 import { FLOOR, MAX_WIDTH } from "./main.js";
 import { Keys } from "./utils";
-
 export interface Coordinates {
   x: number;
   y: number;
@@ -23,13 +22,14 @@ export class Player {
   width: number;
   height: number;
   color: string;
+  image: HTMLImageElement;
 
   constructor(
     position: Coordinates = { x: 100, y: 100 },
     velocity: Coordinates = { x: 0, y: 0 },
     jumps: number = 0,
-    width: number = 30,
-    height: number = 30,
+    width: number = 50,
+    height: number = 50,
     color: string = "red"
   ) {
     this.position = position;
@@ -38,11 +38,19 @@ export class Player {
     this.width = width;
     this.height = height;
     this.color = color;
+    this.image = new Image(width, height);
+    this.image.src =
+      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/microsoft/319/mate_1f9c9.png";
   }
 
   draw(canvas: CanvasRenderingContext2D) {
-    canvas.fillStyle = this.color;
-    canvas.fillRect(this.position.x, this.position.y, this.width, this.height);
+    canvas.drawImage(
+      this.image,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
   }
 
   update(canvas: CanvasRenderingContext2D, keys: Keys) {

@@ -1,17 +1,19 @@
 import { FLOOR } from "./main.js";
 const gravity = 0.5;
 export class Player {
-    constructor(position = { x: 100, y: 100 }, velocity = { x: 0, y: 0 }, jumps = 0, width = 30, height = 30, color = "red") {
+    constructor(position = { x: 100, y: 100 }, velocity = { x: 0, y: 0 }, jumps = 0, width = 50, height = 50, color = "red") {
         this.position = position;
         this.velocity = velocity;
         this.jumps = jumps;
         this.width = width;
         this.height = height;
         this.color = color;
+        this.image = new Image(width, height);
+        this.image.src =
+            "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/microsoft/319/mate_1f9c9.png";
     }
     draw(canvas) {
-        canvas.fillStyle = this.color;
-        canvas.fillRect(this.position.x, this.position.y, this.width, this.height);
+        canvas.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
     }
     update(canvas, keys) {
         if (keys.up)

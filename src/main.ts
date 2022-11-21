@@ -2,6 +2,7 @@ import { Player } from "./Player.js";
 import { Platform } from "./Platform.js";
 import { calcInteractions, initialKeyStatus, Keys } from "./utils.js";
 
+
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
 
