@@ -6,13 +6,20 @@ export interface Coordinates {
   y: number;
 }
 
-export type PlayerAction = "MoveRight" | "MoveLeft" | "Jump" | "Duck" | "Stop";
+export type PlayerAction =
+  | "MoveRight"
+  | "MoveLeft"
+  | "Jump"
+  | "Duck"
+  | "StopX"
+  | "StopY";
 
 const gravity = 0.5;
 
 export class Player {
   position: Coordinates;
   velocity: Coordinates;
+  jumps: number;
   width: number;
   height: number;
   color: string;
@@ -20,12 +27,14 @@ export class Player {
   constructor(
     position: Coordinates = { x: 100, y: 100 },
     velocity: Coordinates = { x: 0, y: 0 },
+    jumps: number = 0,
     width: number = 30,
     height: number = 30,
     color: string = "red"
   ) {
     this.position = position;
     this.velocity = velocity;
+    this.jumps = jumps;
     this.width = width;
     this.height = height;
     this.color = color;
@@ -39,47 +48,33 @@ export class Player {
   update(canvas: CanvasRenderingContext2D, keys: Keys) {
     if (keys.up) this.move("Jump");
 
-    if (keys.right) {
-      if (this.position.x <= MAX_WIDTH - this.width) {
-        this.move("MoveRight");
-      } else {
-        this.move("Stop");
-      }
-    }
+    if (keys.right && this.position.x < 500) this.move("MoveRight");
+    if (keys.right && this.position.x >= 500) this.move("StopX");
 
-    if (keys.left) {
-      if (this.position.x >= 0) {
-        this.move("MoveLeft");
-      } else {
-        this.move("Stop");
-      }
-    }
-    if (!keys.right && !keys.left) this.move("Stop");
+    if (keys.left && this.position.x >= 100) this.move("MoveLeft");
+    if (keys.left && this.position.x < 100) this.move("StopX");
+
+    if (!keys.right && !keys.left) this.move("StopX");
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    if (this.position.y + this.height > FLOOR) {
-      this.stopY();
-    } else {
-      this.velocity.y += gravity;
-    }
+    if (this.position.y + this.height > FLOOR) this.move("StopY");
+    else this.velocity.y += gravity;
 
     this.draw(canvas);
   }
 
   move(action: PlayerAction) {
-    if (action === "MoveRight" && this.position.x < MAX_WIDTH)
-      this.velocity.x = 10;
+    if (this.velocity.y > 0 && this.jumps > 0) this.jumps = 0;
+    if (action === "MoveRight") this.velocity.x = 10;
     if (action === "MoveLeft" && this.position.x > 0) this.velocity.x = -10;
-    if (action === "Stop") this.velocity.x = 0;
-    if (action === "Jump" && this.velocity.y == 0) {
+    if (action === "StopX") this.velocity.x = 0;
+    if (action === "StopY") this.velocity.y = 0;
+    if (action === "Jump" && this.velocity.y == 0 && this.jumps < 2) {
       this.velocity.y = -15;
+      this.jumps++;
     }
-  }
-
-  stopY() {
-    this.velocity.y = 0;
   }
 }
 
