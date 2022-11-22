@@ -1,6 +1,7 @@
 import { Platform } from "./Platform";
 import Player from "./Player";
 
+
 export interface Keys {
   up: boolean;
   right: boolean;
@@ -39,4 +40,8 @@ export function calcInteractions(
       addScrollOffset(5);
     }
   });
+}
+
+export function generateRandomInt(min: number, max: number) {
+  return Math.floor(min + Math.random() * (max - min + 1));
 }

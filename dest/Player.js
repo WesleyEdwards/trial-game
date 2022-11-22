@@ -6,7 +6,6 @@ export class Player {
         this.position = position;
         this.velocity = velocity;
         this.jumps = 0;
-        this.jumpPos = null;
         this.width = width;
         this.height = height;
         this.color = color;
@@ -50,18 +49,12 @@ export class Player {
             this.velocity.y = 0;
             this.position.y = MAX_HEIGHT - this.height;
         }
-        if (this.velocity.y > 3) {
+        if (action === "Jump" && this.velocity.y === 0 && this.jumps < 1) {
+            this.velocity.y = -15;
+            this.jumps++;
+        }
+        if (this.velocity.y > 0)
             this.jumps = 0;
-            this.jumpPos = null;
-        }
-        if (action === "Jump" && Math.abs(this.velocity.y) < 3 && this.jumps < 2) {
-            if ((this.jumpPos && this.jumpPos - this.position.y > 100) ||
-                this.jumpPos === null) {
-                this.velocity.y = -15;
-                this.jumps++;
-                this.jumpPos = this.position.y;
-            }
-        }
     }
     get bottomPos() {
         return this.position.y + this.height;

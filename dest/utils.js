@@ -22,3 +22,6 @@ export function calcInteractions(keys, player, platforms, addScrollOffset) {
         }
     });
 }
+export function generateRandomInt(min, max) {
+    return Math.floor(min + Math.random() * (max - min + 1));
+}
