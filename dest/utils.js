@@ -5,19 +5,18 @@ export const initialKeyStatus = {
 };
 export function calcInteractions(keys, player, platforms, addScrollOffset) {
     platforms.forEach((platform) => {
-        if (player.position.y + player.height <= platform.position.y &&
-            player.position.y + player.height + player.velocity.y >=
-                platform.position.y &&
-            player.position.x + player.width >= platform.position.x &&
-            player.position.x <= platform.position.x + platform.width) {
+        if (player.bottomPos <= platform.position.y &&
+            player.bottomPos + player.velocity.y >= platform.position.y &&
+            player.rightPos >= platform.position.x &&
+            player.position.x <= platform.rightPos) {
             player.move("StopY");
             player.position.y = platform.position.y - player.height;
         }
-        if (player.velocity.x === 0 && keys.right) {
+        if (keys.right && player.velocity.x === 0) {
             platform.position.x -= 5;
             addScrollOffset(-5);
         }
-        if (player.velocity.x === 0 && keys.left) {
+        if (keys.left && player.velocity.x === 0) {
             platform.position.x += 5;
             addScrollOffset(5);
         }

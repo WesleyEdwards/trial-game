@@ -1,4 +1,4 @@
-import { FLOOR } from "./main.js";
+// import { FLOOR } from "./main.js";
 import { Coordinates } from "./Player.js";
 
 export class Platform {
@@ -9,8 +9,8 @@ export class Platform {
 
   constructor(
     position: Coordinates = { x: 100, y: 200 },
-    width: number = 100,
-    height: number = 100,
+    width: number = 200,
+    height: number = 1000,
     color: string = "green"
   ) {
     this.position = position;
@@ -22,5 +22,9 @@ export class Platform {
     canvas.fillStyle = this.color;
 
     canvas.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+
+  get rightPos() {
+    return this.position.x + this.width;
   }
 }
