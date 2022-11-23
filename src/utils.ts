@@ -1,17 +1,18 @@
 import { Platform } from "./Platform";
 import Player from "./Player";
 
-
 export interface Keys {
   up: boolean;
   right: boolean;
   left: boolean;
+  space: boolean;
 }
 
-export const initialKeyStatus: Keys = {
+export const initialKeyStatus: Record<keyof Keys, boolean> = {
   up: false,
   right: false,
   left: false,
+  space: false,
 };
 
 export function calcInteractions(

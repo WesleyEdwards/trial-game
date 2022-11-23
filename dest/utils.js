@@ -2,6 +2,7 @@ export const initialKeyStatus = {
     up: false,
     right: false,
     left: false,
+    space: false,
 };
 export function calcInteractions(keys, player, platforms, addScrollOffset) {
     platforms.forEach((platform) => {

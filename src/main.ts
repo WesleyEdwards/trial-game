@@ -1,17 +1,17 @@
 import { Player } from "./Player.js";
 import { Platform } from "./Platform.js";
-import { calcInteractions, initialKeyStatus, Keys } from "./utils.js";
+import { calcInteractions, initialKeyStatus } from "./utils.js";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
 
-canvas.width = 1024;
-canvas.height = 576;
+export const MAX_WIDTH = 1024;
+export const MAX_HEIGHT = 576;
 
-export const MAX_WIDTH = canvas.width;
-export const MAX_HEIGHT = canvas.height;
+canvas.width = MAX_WIDTH;
+canvas.height = MAX_HEIGHT;
 
-export const PLAT_FREQUENCY = 200;
+export const PLAT_FREQUENCY = 500;
 
 const keys = initialKeyStatus;
 
@@ -21,10 +21,10 @@ let scrollOffset = 0;
 let scrollDiff = 0;
 
 const platforms = [
-  new Platform(scrollOffset, 0, 0),
-  new Platform(scrollOffset, 300),
-  new Platform(scrollOffset, 600),
-  new Platform(scrollOffset, 1000),
+  new Platform(scrollOffset, "start", 100),
+  new Platform(scrollOffset, "bottom", 300),
+  new Platform(scrollOffset, "bottom", 600),
+  new Platform(scrollOffset, "bottom", 1000),
 ];
 
 function animate() {
@@ -32,7 +32,9 @@ function animate() {
 
   if (scrollOffset - scrollDiff > PLAT_FREQUENCY) {
     scrollDiff = scrollOffset;
-    platforms.push(new Platform(scrollOffset));
+    platforms.push(new Platform(scrollOffset, "top"));
+    platforms.push(new Platform(scrollOffset, "middle"));
+    platforms.push(new Platform(scrollOffset, "bottom"));
   }
 
   requestAnimationFrame(animate);
@@ -53,10 +55,12 @@ addEventListener("keydown", ({ code }) => {
   if (code === "ArrowUp") keys.up = true;
   if (code === "ArrowRight") keys.right = true;
   if (code === "ArrowLeft") keys.left = true;
+  if (code === "Space") keys.space = true;
 });
 
 addEventListener("keyup", ({ code }) => {
   if (code === "ArrowUp") keys.up = false;
   if (code === "ArrowRight") keys.right = false;
   if (code === "ArrowLeft") keys.left = false;
+  if (code === "Space") keys.space = false;
 });
