@@ -2,8 +2,8 @@ import { generateRandomInt } from "./utils.js";
 import { Coordinates } from "./Player.js";
 import { MAX_WIDTH, PLAT_FREQUENCY } from "./constants.js";
 
-const PLAT_Y_MIN = 50;
-const PLAT_Y_MAX = 576 - 50;
+const PLAT_Y_MIN = 100;
+const PLAT_Y_MAX = 576 - 30;
 const PLAT_WIDTH_MIN = 200;
 const PLAT_WIDTH_MAX = 500;
 const TOTAL_HEIGHT = 576;
@@ -49,10 +49,10 @@ export function getYPos(sectionY: PlatPosition) {
   if (sectionY === "top") {
     return generateRandomInt(PLAT_Y_MIN, third);
   }
-  if (sectionY === "bottom") {
+  if (sectionY === "middle") {
     return generateRandomInt(third, 2 * third);
   }
-  if (sectionY === "middle") {
+  if (sectionY === "bottom") {
     return generateRandomInt(2 * third, PLAT_Y_MAX);
   }
 
@@ -63,5 +63,5 @@ export function getXPos(offset: number, xPos?: number) {
   if (xPos !== undefined) {
     return xPos;
   }
-  return offset + MAX_WIDTH + generateRandomInt(0, PLAT_FREQUENCY);
+  return offset + generateRandomInt(0, PLAT_FREQUENCY + 40);
 }

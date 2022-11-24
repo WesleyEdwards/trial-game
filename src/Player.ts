@@ -1,9 +1,8 @@
-// import { FLOOR, MAX_WIDTH } from "./main.js";
 import { MAX_HEIGHT, GRAVITY, images } from "./constants.js";
 import { Keys } from "./utils";
 
 const shankTime = 250;
-const shankCoolDown = 250;
+const shankCoolDown = 300;
 
 export interface Coordinates {
   x: number;
@@ -21,10 +20,11 @@ export type PlayerAction =
 const makeImage = (
   width: number,
   height: number,
-  object: "knife" | "player"
+  object: "knifeRight" | "player" | "knifeLeft"
 ) => {
   const image = new Image(width, height);
-  if (object === "knife") image.src = images.knifeRight;
+  if (object === "knifeRight") image.src = images.knifeRight;
+  if (object === "knifeLeft") image.src = images.knifeLeft;
   if (object === "player") image.src = images.player;
   return image;
 };
@@ -35,43 +35,29 @@ export class Player {
   jumps: number;
   width: number;
   height: number;
-  color: string;
   image: HTMLImageElement;
   knifeImage: HTMLImageElement;
+  knifeLeft: HTMLImageElement;
   shank: number;
+  facing: "left" | "right";
 
-  constructor(color: string = "red") {
+  constructor() {
     this.position = { x: 100, y: 100 };
     this.velocity = { x: 0, y: 0 };
     this.jumps = 0;
     this.width = 50;
     this.height = 50;
-    this.color = color;
     this.image = makeImage(this.width, this.height, "player");
-    this.knifeImage = makeImage(this.width, this.height, "knife");
+    this.knifeImage = makeImage(this.width, this.height, "knifeRight");
+    this.knifeLeft = makeImage(this.width, this.height, "knifeLeft");
     this.shank = 0;
+    this.facing = "right";
   }
 
-  draw(canvas: CanvasRenderingContext2D) {
-    canvas.drawImage(
-      this.image,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    );
-    if (Date.now() - this.shank < shankTime) {
-      canvas.drawImage(
-        this.knifeImage,
-        this.position.x + this.width / 2,
-        this.position.y,
-        this.width,
-        this.height
-      );
-    }
-  }
+  update(keys: Keys, xOffset: number) {
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
 
-  update(canvas: CanvasRenderingContext2D, keys: Keys) {
     if (keys.up) this.move("Jump");
 
     if (keys.right && this.position.x < 400) this.move("MoveRight");
@@ -86,18 +72,19 @@ export class Player {
       this.shank = Date.now();
     }
 
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-
     if (this.bottomPos > MAX_HEIGHT) this.move("StopY");
     else this.velocity.y += GRAVITY;
-
-    this.draw(canvas);
   }
 
   move(action: PlayerAction) {
-    if (action === "MoveRight") this.velocity.x = 10;
-    if (action === "MoveLeft" && this.position.x > 0) this.velocity.x = -10;
+    if (action === "MoveRight") {
+      this.velocity.x = 10;
+      this.facing = "right";
+    }
+    if (action === "MoveLeft") {
+      this.velocity.x = -10;
+      this.facing = "left";
+    }
     if (action === "StopX") this.velocity.x = 0;
     if (action === "StopY") {
       this.velocity.y = 0;
@@ -109,6 +96,35 @@ export class Player {
       this.jumps++;
     }
     if (this.velocity.y > 0) this.jumps = 0;
+  }
+
+  draw(canvas: CanvasRenderingContext2D) {
+    canvas.drawImage(
+      this.image,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+    if (Date.now() - this.shank < shankTime) {
+      if (this.facing === "right") {
+        canvas.drawImage(
+          this.knifeImage,
+          this.position.x + this.width / 2,
+          this.position.y,
+          this.width,
+          this.height
+        );
+      } else {
+        canvas.drawImage(
+          this.knifeLeft,
+          this.position.x - this.width / 1.4,
+          this.position.y,
+          this.width,
+          this.height
+        );
+      }
+    }
   }
 
   get bottomPos() {

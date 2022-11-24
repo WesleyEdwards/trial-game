@@ -3,7 +3,7 @@ export const MAX_HEIGHT = 576;
 
 export const GRAVITY = 0.65;
 
-export const PLAT_FREQUENCY = 500;
+export const PLAT_FREQUENCY = 350;
 
 export const images: Record<string, string> = {
   player:
