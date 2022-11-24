@@ -1,9 +1,19 @@
+import { Platform } from "./Platform";
 export const initialKeyStatus = {
     up: false,
     right: false,
     left: false,
     space: false,
 };
+export function createPlatforms() {
+    return [
+        new Platform(0, "start", 100),
+        new Platform(0, "bottom", 300),
+        new Platform(0, "bottom", 600),
+        new Platform(0, "bottom", 900),
+        new Platform(0, "bottom", 1200),
+    ];
+}
 export function calcInteractions(keys, player, platforms, addScrollOffset) {
     platforms.forEach((platform) => {
         if (player.bottomPos <= platform.position.y &&

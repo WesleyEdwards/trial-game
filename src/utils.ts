@@ -15,6 +15,16 @@ export const initialKeyStatus: Record<keyof Keys, boolean> = {
   space: false,
 };
 
+export function createPlatforms(): Platform[] {
+  return [
+    new Platform(0, "start", 100),
+    new Platform(0, "bottom", 300),
+    new Platform(0, "bottom", 600),
+    new Platform(0, "bottom", 900),
+    new Platform(0, "bottom", 1200),
+  ];
+}
+
 export function calcInteractions(
   keys: Keys,
   player: Player,

@@ -1,17 +1,17 @@
 import { Player } from "./Player.js";
 import { Platform } from "./Platform.js";
-import { calcInteractions, initialKeyStatus } from "./utils.js";
+import {
+  createPlatforms,
+  calcInteractions,
+  initialKeyStatus,
+} from "./utils.js";
+import { MAX_HEIGHT, MAX_WIDTH, PLAT_FREQUENCY } from "./constants.js";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
 
-export const MAX_WIDTH = 1024;
-export const MAX_HEIGHT = 576;
-
 canvas.width = MAX_WIDTH;
 canvas.height = MAX_HEIGHT;
-
-export const PLAT_FREQUENCY = 500;
 
 const keys = initialKeyStatus;
 
@@ -20,12 +20,8 @@ const player = new Player();
 let scrollOffset = 0;
 let scrollDiff = 0;
 
-const platforms = [
-  new Platform(scrollOffset, "start", 100),
-  new Platform(scrollOffset, "bottom", 300),
-  new Platform(scrollOffset, "bottom", 600),
-  new Platform(scrollOffset, "bottom", 1000),
-];
+// const platforms = createPlatforms()
+const platforms: Platform[] = [];
 
 function animate() {
   if (!context) throw new Error("Context is null");

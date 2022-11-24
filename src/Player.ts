@@ -1,16 +1,10 @@
 // import { FLOOR, MAX_WIDTH } from "./main.js";
-import { MAX_HEIGHT, MAX_WIDTH } from "./main.js";
+import { MAX_HEIGHT, GRAVITY, images } from "./constants.js";
 import { Keys } from "./utils";
-
-const playerSrc =
-  "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/microsoft/319/mate_1f9c9.png";
-
-const knifeSrc =
-  "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/whatsapp/326/kitchen-knife_1f52a.png";
 
 const shankTime = 250;
 const shankCoolDown = 250;
-const gravity = 0.65;
+
 export interface Coordinates {
   x: number;
   y: number;
@@ -30,10 +24,8 @@ const makeImage = (
   object: "knife" | "player"
 ) => {
   const image = new Image(width, height);
-  if (object === "knife") image.src = knifeSrc;
-  if (object === "player") image.src = playerSrc;
-  // image.style.transform = "scaleX(-1)";
-  // image.translate
+  if (object === "knife") image.src = images.knifeRight;
+  if (object === "player") image.src = images.player;
   return image;
 };
 
@@ -98,7 +90,7 @@ export class Player {
     this.position.y += this.velocity.y;
 
     if (this.bottomPos > MAX_HEIGHT) this.move("StopY");
-    else this.velocity.y += gravity;
+    else this.velocity.y += GRAVITY;
 
     this.draw(canvas);
   }
