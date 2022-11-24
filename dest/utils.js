@@ -1,5 +1,8 @@
 import { MAX_HEIGHT, MAX_WIDTH } from "./constants.js";
 import { Platform } from "./Platform.js";
+const NUM_PLATFORMS = 30;
+const END_POS = 4500;
+const INCREMENT_VALUE = 5;
 export const initialKeyStatus = {
     up: false,
     right: false,
@@ -7,20 +10,10 @@ export const initialKeyStatus = {
     space: false,
 };
 export function createPlatforms() {
-    return [
-        new Platform(0, "start", 100),
-        new Platform(0, "bottom", 400),
-        new Platform(0, "bottom", 700),
-        new Platform(0, "bottom", 1000),
-        new Platform(0, "bottom", 1300),
-    ];
-}
-export function morePlatforms(offset) {
-    return [
-        new Platform(offset, "top"),
-        new Platform(offset, "middle"),
-        new Platform(offset, "bottom"),
-    ];
+    return new Array(NUM_PLATFORMS).fill(null).map((_, i) => {
+        const sectionY = i % 3 === 0 ? "top" : i % 3 === 1 ? "middle" : "bottom";
+        return new Platform(END_POS - i * 150, sectionY);
+    });
 }
 export function drawEverything(context, platforms, player) {
     context.fillStyle = "white";
@@ -28,7 +21,7 @@ export function drawEverything(context, platforms, player) {
     platforms.forEach((plat) => plat.draw(context));
     player.draw(context);
 }
-export function calcInteractions(keys, player, platforms, scrollOffset, addScrollOffset) {
+export function calcInteractions(keys, player, platforms, gameState) {
     platforms.forEach((platform) => {
         if (player.bottomPos <= platform.position.y &&
             player.bottomPos + player.velocity.y >= platform.position.y &&
@@ -38,17 +31,17 @@ export function calcInteractions(keys, player, platforms, scrollOffset, addScrol
             player.position.y = platform.position.y - player.height;
         }
         if (keys.right && player.velocity.x === 0) {
-            platform.position.x -= 5;
+            platform.position.x -= INCREMENT_VALUE;
         }
-        if (keys.left && player.velocity.x === 0 && scrollOffset > 0) {
-            platform.position.x += 5;
+        if (keys.left && player.velocity.x === 0 && gameState.scrollOffset > 0) {
+            platform.position.x += INCREMENT_VALUE;
         }
     });
     if (keys.right && player.velocity.x === 0) {
-        addScrollOffset(-10);
+        gameState.incrementScrollOffset(-INCREMENT_VALUE);
     }
-    if (keys.left && player.velocity.x === 0 && scrollOffset > 0) {
-        addScrollOffset(10);
+    if (keys.left && player.velocity.x === 0 && gameState.scrollOffset > 0) {
+        gameState.incrementScrollOffset(INCREMENT_VALUE);
     }
 }
 export function generateRandomInt(min, max) {

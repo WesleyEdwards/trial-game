@@ -6,9 +6,9 @@ const PLAT_WIDTH_MIN = 200;
 const PLAT_WIDTH_MAX = 500;
 const TOTAL_HEIGHT = 576;
 export class Platform {
-    constructor(scrollOffset = 0, sectionY, xPos) {
+    constructor(xPos, sectionY) {
         this.position = {
-            x: getXPos(scrollOffset, xPos),
+            x: getXPos(xPos),
             y: getYPos(sectionY),
         };
         this.width = generateRandomInt(PLAT_WIDTH_MIN, PLAT_WIDTH_MAX);
@@ -39,9 +39,6 @@ export function getYPos(sectionY) {
     }
     return PLAT_Y_MAX;
 }
-export function getXPos(offset, xPos) {
-    if (xPos !== undefined) {
-        return xPos;
-    }
-    return offset + generateRandomInt(0, PLAT_FREQUENCY + 40);
+export function getXPos(xPos) {
+    return xPos + generateRandomInt(0, PLAT_FREQUENCY);
 }

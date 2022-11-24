@@ -16,9 +16,9 @@ export class Platform {
   height: number;
   color: string;
 
-  constructor(scrollOffset: number = 0, sectionY: PlatPosition, xPos?: number) {
+  constructor(xPos: number, sectionY: PlatPosition) {
     this.position = {
-      x: getXPos(scrollOffset, xPos),
+      x: getXPos(xPos),
       y: getYPos(sectionY),
     };
     this.width = generateRandomInt(PLAT_WIDTH_MIN, PLAT_WIDTH_MAX);
@@ -59,9 +59,6 @@ export function getYPos(sectionY: PlatPosition) {
   return PLAT_Y_MAX;
 }
 
-export function getXPos(offset: number, xPos?: number) {
-  if (xPos !== undefined) {
-    return xPos;
-  }
-  return offset + generateRandomInt(0, PLAT_FREQUENCY + 40);
+export function getXPos(xPos: number) {
+  return xPos + generateRandomInt(0, PLAT_FREQUENCY);
 }

@@ -1,4 +1,5 @@
 import { MAX_HEIGHT, MAX_WIDTH } from "./constants.js";
+import { GameState } from "./GameState.js";
 import { Platform } from "./Platform.js";
 import Player from "./Player.js";
 
@@ -9,6 +10,11 @@ export interface Keys {
   space: boolean;
 }
 
+const NUM_PLATFORMS = 30;
+const END_POS = 4500;
+
+const INCREMENT_VALUE = 5;
+
 export const initialKeyStatus: Record<keyof Keys, boolean> = {
   up: false,
   right: false,
@@ -17,21 +23,10 @@ export const initialKeyStatus: Record<keyof Keys, boolean> = {
 };
 
 export function createPlatforms(): Platform[] {
-  return [
-    new Platform(0, "start", 100),
-    new Platform(0, "bottom", 400),
-    new Platform(0, "bottom", 700),
-    new Platform(0, "bottom", 1000),
-    new Platform(0, "bottom", 1300),
-  ];
-}
-
-export function morePlatforms(offset: number): Platform[] {
-  return [
-    new Platform(offset, "top"),
-    new Platform(offset, "middle"),
-    new Platform(offset, "bottom"),
-  ];
+  return new Array(NUM_PLATFORMS).fill(null).map((_, i) => {
+    const sectionY = i % 3 === 0 ? "top" : i % 3 === 1 ? "middle" : "bottom";
+    return new Platform(END_POS - i * 150, sectionY);
+  });
 }
 
 export function drawEverything(
@@ -50,8 +45,7 @@ export function calcInteractions(
   keys: Keys,
   player: Player,
   platforms: Platform[],
-  scrollOffset: number,
-  addScrollOffset: (num: number) => void
+  gameState: GameState
 ) {
   platforms.forEach((platform) => {
     if (
@@ -65,18 +59,18 @@ export function calcInteractions(
     }
 
     if (keys.right && player.velocity.x === 0) {
-      platform.position.x -= 5;
+      platform.position.x -= INCREMENT_VALUE;
     }
-    if (keys.left && player.velocity.x === 0 && scrollOffset > 0) {
-      platform.position.x += 5;
+    if (keys.left && player.velocity.x === 0 && gameState.scrollOffset > 0) {
+      platform.position.x += INCREMENT_VALUE;
     }
   });
 
   if (keys.right && player.velocity.x === 0) {
-    addScrollOffset(-10);
+    gameState.incrementScrollOffset(-INCREMENT_VALUE);
   }
-  if (keys.left && player.velocity.x === 0 && scrollOffset > 0) {
-    addScrollOffset(10);
+  if (keys.left && player.velocity.x === 0 && gameState.scrollOffset > 0) {
+    gameState.incrementScrollOffset(INCREMENT_VALUE);
   }
 }
 
