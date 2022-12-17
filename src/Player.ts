@@ -1,8 +1,9 @@
-import { MAX_HEIGHT, GRAVITY, images } from "./constants.js";
-import { Keys } from "./utils";
+import { MAX_HEIGHT, GRAVITY, Keys } from "./constants.js";
+import { makeImage } from "./drawingUtils.js";
 
 const shankTime = 250;
 const shankCoolDown = 300;
+const moveSpeed = 10;
 
 export interface Coordinates {
   x: number;
@@ -16,18 +17,6 @@ export type PlayerAction =
   | "Duck"
   | "StopX"
   | "StopY";
-
-const makeImage = (
-  width: number,
-  height: number,
-  object: "knifeRight" | "player" | "knifeLeft"
-) => {
-  const image = new Image(width, height);
-  if (object === "knifeRight") image.src = images.knifeRight;
-  if (object === "knifeLeft") image.src = images.knifeLeft;
-  if (object === "player") image.src = images.player;
-  return image;
-};
 
 export class Player {
   position: Coordinates;
@@ -78,11 +67,11 @@ export class Player {
 
   move(action: PlayerAction) {
     if (action === "MoveRight") {
-      this.velocity.x = 10;
+      this.velocity.x = moveSpeed;
       this.facing = "right";
     }
     if (action === "MoveLeft") {
-      this.velocity.x = -10;
+      this.velocity.x = -moveSpeed;
       this.facing = "left";
     }
     if (action === "StopX") this.velocity.x = 0;

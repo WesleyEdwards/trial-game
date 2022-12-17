@@ -5,11 +5,21 @@ export const GRAVITY = 0.65;
 
 export const PLAT_FREQUENCY = 350;
 
-export const images: Record<string, string> = {
-  player:
-    "https://user-images.githubusercontent.com/97990557/203665426-fd8ff45f-0cfd-4fd9-938b-49c00026cec7.png",
-  knifeRight:
-    "https://user-images.githubusercontent.com/97990557/203665544-8258c825-8683-4ee2-b940-db8612c62d18.png",
-  knifeLeft:
-    "https://user-images.githubusercontent.com/97990557/203666048-922403cc-30aa-4b8c-bab3-64de29562e02.png",
+export const NUM_PLATFORMS = 30;
+export const NUM_OPPONENTS = 5;
+export const END_POS = 4500;
+export const INCREMENT_VALUE = 5;
+
+export interface Keys {
+  up: boolean;
+  right: boolean;
+  left: boolean;
+  space: boolean;
+}
+
+export const initialKeyStatus: Record<keyof Keys, boolean> = {
+  up: false,
+  right: false,
+  left: false,
+  space: false,
 };
