@@ -1,15 +1,17 @@
 import {
   createPlatforms,
-  calcInteractions,
+  calculateInteractions,
   drawEverything,
   createOpponents,
   updateEverything,
+  debounceLog,
 } from "./utils.js";
 import { MAX_HEIGHT, MAX_WIDTH } from "./constants.js";
 import { GameState } from "./GameState.js";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
+if (!context) throw new Error("Context is null");
 
 const button = document.getElementById("play-game");
 const container = document.getElementById("main-div");
@@ -27,20 +29,35 @@ canvas.height = MAX_HEIGHT;
 
 const gameState = new GameState();
 
-if (!context) throw new Error("Context is null");
-
 function animate() {
   requestAnimationFrame(animate);
+  debounceLog(gameState.winState);
+
+  if (gameState.winState === "lose") {
+    handleLose(context as CanvasRenderingContext2D);
+    return;
+  }
 
   drawEverything(context as CanvasRenderingContext2D, gameState);
 
   updateEverything(gameState);
-  calcInteractions(gameState);
+  calculateInteractions(gameState);
 }
 
 const enterGameLoop = () => {
+  gameState.setGameState("playing");
   animate();
 };
+
+function handleLose(context: CanvasRenderingContext2D) {
+  context.clearRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
+  context.font = "30px Arial";
+  context.fillText("You lose! :(", MAX_WIDTH / 2 - 60, MAX_HEIGHT / 2);
+  // const button = document.getElementById("play-game");
+  // if (button) {
+  //   button.removeAttribute("disabled");
+  // }
+}
 
 addEventListener("keydown", ({ code }) => {
   if (code === "ArrowUp") gameState.keys.up = true;

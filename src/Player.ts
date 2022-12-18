@@ -1,22 +1,8 @@
-import { MAX_HEIGHT, GRAVITY, Keys } from "./constants.js";
+import { MAX_HEIGHT, GRAVITY, playerConstants } from "./constants.js";
 import { makeImage } from "./drawingUtils.js";
+import { Coordinates, Keys, PlayerAction } from "./models.js";
 
-const shankTime = 250;
-const shankCoolDown = 300;
-const moveSpeed = 10;
-
-export interface Coordinates {
-  x: number;
-  y: number;
-}
-
-export type PlayerAction =
-  | "MoveRight"
-  | "MoveLeft"
-  | "Jump"
-  | "Duck"
-  | "StopX"
-  | "StopY";
+const { shankTime, shankCoolDown, moveSpeed, radius } = playerConstants;
 
 export class Player {
   position: Coordinates;
@@ -34,8 +20,8 @@ export class Player {
     this.position = { x: 100, y: 100 };
     this.velocity = { x: 0, y: 0 };
     this.jumps = 0;
-    this.width = 50;
-    this.height = 50;
+    this.width = radius * 2;
+    this.height = radius * 2;
     this.image = makeImage(this.width, this.height, "player");
     this.knifeImage = makeImage(this.width, this.height, "knifeRight");
     this.knifeLeft = makeImage(this.width, this.height, "knifeLeft");

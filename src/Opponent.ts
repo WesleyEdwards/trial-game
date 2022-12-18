@@ -1,10 +1,9 @@
-import { GRAVITY, MAX_HEIGHT } from "./constants.js";
+import { GRAVITY, MAX_HEIGHT, opponentConstants } from "./constants.js";
 import { makeImage } from "./drawingUtils.js";
-import { Coordinates, PlayerAction } from "./Player.js";
+import { Coordinates, PlayerAction } from "./models.js";
 import { debounceLog, generateRandomInt, randomOutOf } from "./utils.js";
 
-const moveSpeed = 3;
-
+const { moveSpeed } = opponentConstants;
 export class Opponent {
   position: Coordinates;
   velocity: Coordinates;

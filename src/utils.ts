@@ -1,7 +1,6 @@
 import {
   END_POS,
   INCREMENT_VALUE,
-  Keys,
   MAX_HEIGHT,
   MAX_WIDTH,
   NUM_OPPONENTS,
@@ -10,20 +9,6 @@ import {
 import { GameState } from "./GameState.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
-import Player, { Coordinates, PlayerAction } from "./Player.js";
-
-interface hasPosition {
-  position: Coordinates;
-}
-
-interface Character {
-  position: Coordinates;
-  velocity: Coordinates;
-  bottomPos: number;
-  rightPos: number;
-  height: number;
-  move: (action: PlayerAction) => void;
-}
 
 export function updateEverything(gameState: GameState) {
   const { player, opponents, keys, scrollOffset } = gameState;
@@ -58,52 +43,8 @@ export function drawEverything(
   player.draw(context);
 }
 
-function updateWithPlayer<T extends hasPosition>(
-  gameState: GameState,
-  objects: T[]
-): void {
-  const { keys, player } = gameState;
-  if (keys.right && player.velocity.x === 0) {
-    objects.forEach((object) => {
-      object.position.x -= INCREMENT_VALUE;
-    });
-  }
-  if (keys.left && player.velocity.x === 0 && gameState.scrollOffset > 0) {
-    objects.forEach((object) => {
-      object.position.x += INCREMENT_VALUE;
-    });
-  }
-}
-
-function calcPlatColl<T extends Character>(platform: Platform, char: T) {
-  if (
-    char.bottomPos <= platform.position.y &&
-    char.bottomPos + char.velocity.y >= platform.position.y &&
-    char.rightPos >= platform.position.x &&
-    char.position.x <= platform.rightPos
-  ) {
-    char.move("StopY");
-    char.position.y = platform.position.y - char.height;
-  }
-}
-
-export function calcInteractions(gameState: GameState) {
-  const { platforms, opponents, player, keys } = gameState;
-
-  platforms.forEach((platform) => {
-    opponents.forEach((opp) => calcPlatColl(platform, opp));
-    calcPlatColl(platform, player);
-  });
-
-  updateWithPlayer(gameState, platforms);
-  updateWithPlayer(gameState, opponents);
-
-  if (keys.right && player.velocity.x === 0) {
-    gameState.incrementScrollOffset(-INCREMENT_VALUE);
-  }
-  if (keys.left && player.velocity.x === 0 && gameState.scrollOffset > 0) {
-    gameState.incrementScrollOffset(INCREMENT_VALUE);
-  }
+export function calculateInteractions(gameState: GameState) {
+  gameState.calcInteractions();
 }
 
 export function generateRandomInt(min: number, max: number): number {

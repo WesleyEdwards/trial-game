@@ -1,4 +1,4 @@
-import { END_POS, INCREMENT_VALUE, MAX_HEIGHT, MAX_WIDTH, NUM_OPPONENTS, NUM_PLATFORMS, } from "./constants.js";
+import { END_POS, MAX_HEIGHT, MAX_WIDTH, NUM_OPPONENTS, NUM_PLATFORMS, } from "./constants.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
 export function updateEverything(gameState) {
@@ -25,42 +25,8 @@ export function drawEverything(context, gameState) {
     opponents.forEach((opponent) => opponent.draw(context));
     player.draw(context);
 }
-function updateWithPlayer(gameState, objects) {
-    const { keys, player } = gameState;
-    if (keys.right && player.velocity.x === 0) {
-        objects.forEach((object) => {
-            object.position.x -= INCREMENT_VALUE;
-        });
-    }
-    if (keys.left && player.velocity.x === 0 && gameState.scrollOffset > 0) {
-        objects.forEach((object) => {
-            object.position.x += INCREMENT_VALUE;
-        });
-    }
-}
-function calcPlatColl(platform, char) {
-    if (char.bottomPos <= platform.position.y &&
-        char.bottomPos + char.velocity.y >= platform.position.y &&
-        char.rightPos >= platform.position.x &&
-        char.position.x <= platform.rightPos) {
-        char.move("StopY");
-        char.position.y = platform.position.y - char.height;
-    }
-}
-export function calcInteractions(gameState) {
-    const { platforms, opponents, player, keys } = gameState;
-    platforms.forEach((platform) => {
-        opponents.forEach((opp) => calcPlatColl(platform, opp));
-        calcPlatColl(platform, player);
-    });
-    updateWithPlayer(gameState, platforms);
-    updateWithPlayer(gameState, opponents);
-    if (keys.right && player.velocity.x === 0) {
-        gameState.incrementScrollOffset(-INCREMENT_VALUE);
-    }
-    if (keys.left && player.velocity.x === 0 && gameState.scrollOffset > 0) {
-        gameState.incrementScrollOffset(INCREMENT_VALUE);
-    }
+export function calculateInteractions(gameState) {
+    gameState.calcInteractions();
 }
 export function generateRandomInt(min, max) {
     return Math.floor(min + Math.random() * (max - min + 1));

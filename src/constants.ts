@@ -1,3 +1,5 @@
+import { Keys } from "./models";
+
 export const MAX_WIDTH = 1024;
 export const MAX_HEIGHT = 576;
 
@@ -10,12 +12,19 @@ export const NUM_OPPONENTS = 5;
 export const END_POS = 4500;
 export const INCREMENT_VALUE = 5;
 
-export interface Keys {
-  up: boolean;
-  right: boolean;
-  left: boolean;
-  space: boolean;
-}
+// Player
+export const playerConstants = {
+  shankTime: 250,
+  shankCoolDown: 300,
+  moveSpeed: 5,
+  radius: 25,
+  // moveSpeed: 10,
+};
+
+export const opponentConstants = {
+  moveSpeed: 1,
+  // moveSpeed: 3,
+};
 
 export const initialKeyStatus: Record<keyof Keys, boolean> = {
   up: false,
