@@ -1,6 +1,6 @@
 import { generateRandomInt } from "./utils.js";
-import { Coordinates } from "./Player.js";
 import { MAX_WIDTH, PLAT_FREQUENCY } from "./constants.js";
+import { Coordinates } from "./models.js";
 
 const PLAT_Y_MIN = 100;
 const PLAT_Y_MAX = 576 - 30;

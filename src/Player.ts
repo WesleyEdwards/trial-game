@@ -1,33 +1,8 @@
-import { MAX_HEIGHT, GRAVITY, images } from "./constants.js";
-import { Keys } from "./utils";
+import { MAX_HEIGHT, GRAVITY, playerConstants } from "./constants.js";
+import { makeImage } from "./drawingUtils.js";
+import { Coordinates, Keys, PlayerAction } from "./models.js";
 
-const shankTime = 250;
-const shankCoolDown = 300;
-
-export interface Coordinates {
-  x: number;
-  y: number;
-}
-
-export type PlayerAction =
-  | "MoveRight"
-  | "MoveLeft"
-  | "Jump"
-  | "Duck"
-  | "StopX"
-  | "StopY";
-
-const makeImage = (
-  width: number,
-  height: number,
-  object: "knifeRight" | "player" | "knifeLeft"
-) => {
-  const image = new Image(width, height);
-  if (object === "knifeRight") image.src = images.knifeRight;
-  if (object === "knifeLeft") image.src = images.knifeLeft;
-  if (object === "player") image.src = images.player;
-  return image;
-};
+const { shankTime, shankCoolDown, moveSpeed, radius } = playerConstants;
 
 export class Player {
   position: Coordinates;
@@ -45,8 +20,8 @@ export class Player {
     this.position = { x: 100, y: 100 };
     this.velocity = { x: 0, y: 0 };
     this.jumps = 0;
-    this.width = 50;
-    this.height = 50;
+    this.width = radius * 2;
+    this.height = radius * 2;
     this.image = makeImage(this.width, this.height, "player");
     this.knifeImage = makeImage(this.width, this.height, "knifeRight");
     this.knifeLeft = makeImage(this.width, this.height, "knifeLeft");
@@ -78,11 +53,11 @@ export class Player {
 
   move(action: PlayerAction) {
     if (action === "MoveRight") {
-      this.velocity.x = 10;
+      this.velocity.x = moveSpeed;
       this.facing = "right";
     }
     if (action === "MoveLeft") {
-      this.velocity.x = -10;
+      this.velocity.x = -moveSpeed;
       this.facing = "left";
     }
     if (action === "StopX") this.velocity.x = 0;
