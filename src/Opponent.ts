@@ -1,4 +1,4 @@
-import { GRAVITY, MAX_HEIGHT, opponentConstants } from "./constants.js";
+import { GRAVITY, MAX_CANVAS_HEIGHT, opponentConstants } from "./constants.js";
 import { makeImage } from "./drawingUtils.js";
 import { Coordinates, PlayerAction } from "./models.js";
 import { debounceLog, generateRandomInt, randomOutOf } from "./utils.js";
@@ -33,14 +33,14 @@ export class Opponent {
       this.velocity.x = -this.velocity.x;
     }
 
-    if (this.bottomPos > MAX_HEIGHT) this.move("StopY");
+    if (this.bottomPos > MAX_CANVAS_HEIGHT) this.move("StopY");
     else this.velocity.y += GRAVITY;
   }
 
   move(action: PlayerAction) {
     if (action === "StopY") {
       this.velocity.y = 0;
-      this.position.y = MAX_HEIGHT - this.height;
+      this.position.y = MAX_CANVAS_HEIGHT - this.height;
     }
     if (action === "Jump") {
       this.velocity.y = -15;

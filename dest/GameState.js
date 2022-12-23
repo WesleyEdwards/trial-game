@@ -17,6 +17,13 @@ export class GameState {
     setGameState(state) {
         this.winState = state;
     }
+    reset() {
+        this.setGameState("playing");
+        this.scrollOffset = 0;
+        this.player = new Player();
+        this.opponents = createOpponents();
+        this.platforms = createPlatforms();
+    }
     calcInteractions() {
         this.platforms.forEach((platform) => {
             this.opponents.forEach((opp) => calcPlatColl(platform, opp));

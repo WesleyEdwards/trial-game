@@ -1,8 +1,8 @@
 import {
   END_POS,
   INCREMENT_VALUE,
-  MAX_HEIGHT,
-  MAX_WIDTH,
+  MAX_CANVAS_HEIGHT,
+  MAX_CANVAS_WIDTH,
   NUM_OPPONENTS,
   NUM_PLATFORMS,
 } from "./constants.js";
@@ -24,9 +24,9 @@ export function createPlatforms(): Platform[] {
 }
 
 export function createOpponents(): Opponent[] {
-  return new Array(NUM_OPPONENTS).fill(null).map((_, i) => {
-    return new Opponent(generateRandomInt(0, END_POS));
-  });
+  return new Array(NUM_OPPONENTS)
+    .fill(null)
+    .map(() => new Opponent(generateRandomInt(500, END_POS)));
 }
 
 export function drawEverything(
@@ -36,7 +36,7 @@ export function drawEverything(
   const { platforms, opponents, player } = gameState;
 
   context.fillStyle = "white";
-  context.fillRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
+  context.fillRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
 
   platforms.forEach((plat) => plat.draw(context));
   opponents.forEach((opponent) => opponent.draw(context));

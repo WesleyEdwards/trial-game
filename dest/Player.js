@@ -1,4 +1,4 @@
-import { MAX_HEIGHT, GRAVITY, playerConstants } from "./constants.js";
+import { MAX_CANVAS_HEIGHT, GRAVITY, playerConstants } from "./constants.js";
 import { makeImage } from "./drawingUtils.js";
 const { shankTime, shankCoolDown, moveSpeed, radius } = playerConstants;
 export class Player {
@@ -32,7 +32,7 @@ export class Player {
         if (keys.space && Date.now() - this.shank > shankTime + shankCoolDown) {
             this.shank = Date.now();
         }
-        if (this.bottomPos > MAX_HEIGHT)
+        if (this.bottomPos > MAX_CANVAS_HEIGHT)
             this.move("StopY");
         else
             this.velocity.y += GRAVITY;
@@ -50,7 +50,7 @@ export class Player {
             this.velocity.x = 0;
         if (action === "StopY") {
             this.velocity.y = 0;
-            this.position.y = MAX_HEIGHT - this.height;
+            this.position.y = MAX_CANVAS_HEIGHT - this.height;
         }
         if (action === "Jump" && this.velocity.y === 0 && this.jumps < 1) {
             this.velocity.y = -15;

@@ -1,62 +1,37 @@
 import { calculateInteractions, drawEverything, updateEverything, } from "./utils.js";
-import { MAX_HEIGHT, MAX_WIDTH } from "./constants.js";
 import { GameState } from "./GameState.js";
-const canvas = document.getElementById("canvas");
+import { addEventListeners, handleLose, setupGame } from "./DomFunctions.js";
+const gameState = new GameState();
+const enterGameLoop = () => {
+    gameState.reset();
+    loop();
+};
+const canvas = setupGame(enterGameLoop);
 const context = canvas.getContext("2d");
 if (!context)
     throw new Error("Context is null");
-const button = document.getElementById("play-game");
-const container = document.getElementById("main-div");
-if (button && container) {
-    button.addEventListener("click", () => {
-        enterGameLoop();
-        button.setAttribute("disabled", "true");
-    });
-    container.appendChild(button);
-}
-canvas.width = MAX_WIDTH;
-canvas.height = MAX_HEIGHT;
-const gameState = new GameState();
-function animate() {
-    requestAnimationFrame(animate);
+let requestId = undefined;
+function loop() {
+    requestId = undefined;
     if (gameState.winState === "lose") {
         handleLose(context);
+        stop();
         return;
     }
     drawEverything(context, gameState);
     updateEverything(gameState);
     calculateInteractions(gameState);
+    start();
 }
-const enterGameLoop = () => {
-    gameState.setGameState("playing");
-    animate();
-};
-function handleLose(context) {
-    context.clearRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
-    context.font = "30px Arial";
-    context.fillText("You lose! :(", MAX_WIDTH / 2 - 60, MAX_HEIGHT / 2);
-    // const button = document.getElementById("play-game");
-    // if (button) {
-    //   button.removeAttribute("disabled");
-    // }
+function start() {
+    if (!requestId) {
+        requestId = window.requestAnimationFrame(loop);
+    }
 }
-addEventListener("keydown", ({ code }) => {
-    if (code === "ArrowUp")
-        gameState.keys.up = true;
-    if (code === "ArrowRight")
-        gameState.keys.right = true;
-    if (code === "ArrowLeft")
-        gameState.keys.left = true;
-    if (code === "Space")
-        gameState.keys.space = true;
-});
-addEventListener("keyup", ({ code }) => {
-    if (code === "ArrowUp")
-        gameState.keys.up = false;
-    if (code === "ArrowRight")
-        gameState.keys.right = false;
-    if (code === "ArrowLeft")
-        gameState.keys.left = false;
-    if (code === "Space")
-        gameState.keys.space = false;
-});
+function stop() {
+    if (requestId) {
+        window.cancelAnimationFrame(requestId);
+        requestId = undefined;
+    }
+}
+addEventListeners(gameState);
