@@ -61,7 +61,7 @@ export class Player {
     }
     draw(canvas) {
         canvas.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
-        if (Date.now() - this.shank < shankTime) {
+        if (this.shanking) {
             if (this.facing === "right") {
                 canvas.drawImage(this.knifeImage, this.position.x + this.width / 2, this.position.y, this.width, this.height);
             }
@@ -69,6 +69,9 @@ export class Player {
                 canvas.drawImage(this.knifeLeft, this.position.x - this.width / 1.4, this.position.y, this.width, this.height);
             }
         }
+    }
+    get shanking() {
+        return Date.now() - this.shank < shankTime;
     }
     get bottomPos() {
         return this.position.y + this.height;

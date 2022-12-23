@@ -21,13 +21,31 @@ export function calcPlatColl(platform, char) {
     }
 }
 export function checkIfCaught(player, opponents) {
-    let caught = false;
-    opponents.forEach((opp) => {
+    return opponents.some((opp) => {
         const distBetween = Math.sqrt(Math.pow(opp.position.x - player.position.x, 2) +
             Math.pow(opp.position.y - player.position.y, 2));
         if (distBetween < playerConstants.radius * 2) {
-            caught = true;
+            return true;
         }
+        return false;
     });
-    return caught;
+}
+function knifeStatus(player, opp) {
+    if (!player.shanking)
+        return false;
+    if (player.facing === "right" && player.position.x < opp.position.x)
+        return true;
+    if (player.facing === "left" && player.position.x > opp.position.x)
+        return true;
+    return false;
+}
+export function updateLiveStatus(player, opponents) {
+    return opponents.find((opp) => {
+        const distBetween = Math.sqrt(Math.pow(opp.position.x - player.position.x, 2) +
+            Math.pow(opp.position.y - player.position.y, 2));
+        if (distBetween < playerConstants.radius * 3 && knifeStatus(player, opp)) {
+            return opp;
+        }
+        return undefined;
+    });
 }

@@ -1,10 +1,7 @@
 import {
-  createPlatforms,
   calculateInteractions,
   drawEverything,
-  createOpponents,
   updateEverything,
-  debounceLog,
 } from "./utils.js";
 import { MAX_HEIGHT, MAX_WIDTH } from "./constants.js";
 import { GameState } from "./GameState.js";
@@ -31,7 +28,6 @@ const gameState = new GameState();
 
 function animate() {
   requestAnimationFrame(animate);
-  debounceLog(gameState.winState);
 
   if (gameState.winState === "lose") {
     handleLose(context as CanvasRenderingContext2D);

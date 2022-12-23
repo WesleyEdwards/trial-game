@@ -2,6 +2,7 @@ import { INCREMENT_VALUE, initialKeyStatus } from "./constants.js";
 import {
   calcPlatColl,
   checkIfCaught,
+  updateLiveStatus,
   updateWithPlayer,
 } from "./GameStateFunctions.js";
 import { Keys } from "./models.js";
@@ -43,8 +44,13 @@ export class GameState {
 
     updateWithPlayer(this.keys, this.player, this.scrollOffset, this.platforms);
     updateWithPlayer(this.keys, this.player, this.scrollOffset, this.opponents);
+
+    const remove = updateLiveStatus(this.player, this.opponents);
+    if (remove !== undefined) {
+      this.opponents.splice(this.opponents.indexOf(remove), 1);
+    }
+
     if (checkIfCaught(this.player, this.opponents)) {
-      console.log("caught");
       this.setGameState("lose");
     }
 

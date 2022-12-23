@@ -1,4 +1,4 @@
-import { calculateInteractions, drawEverything, updateEverything, debounceLog, } from "./utils.js";
+import { calculateInteractions, drawEverything, updateEverything, } from "./utils.js";
 import { MAX_HEIGHT, MAX_WIDTH } from "./constants.js";
 import { GameState } from "./GameState.js";
 const canvas = document.getElementById("canvas");
@@ -19,7 +19,6 @@ canvas.height = MAX_HEIGHT;
 const gameState = new GameState();
 function animate() {
     requestAnimationFrame(animate);
-    debounceLog(gameState.winState);
     if (gameState.winState === "lose") {
         handleLose(context);
         return;
