@@ -1,4 +1,5 @@
 import { INCREMENT_VALUE, initialKeyStatus } from "./constants.js";
+import { makeImage } from "./drawingUtils.js";
 import {
   calcPlatColl,
   checkIfCaught,
@@ -9,6 +10,7 @@ import { Keys } from "./models.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
 import Player from "./Player.js";
+import { Pot } from "./Pot.js";
 import { createOpponents, createPlatforms, debounceLog } from "./utils.js";
 
 type winState = "win" | "lose" | "playing";
@@ -20,6 +22,7 @@ export class GameState {
   platforms: Platform[];
   opponents: Opponent[];
   keys: Keys;
+  pot: Pot;
   constructor() {
     this.scrollOffset = 0;
     this.winState = "playing";
@@ -27,6 +30,7 @@ export class GameState {
     this.player = new Player();
     this.opponents = createOpponents();
     this.platforms = createPlatforms();
+    this.pot = new Pot();
   }
 
   incrementScrollOffset(num: number) {
@@ -42,6 +46,7 @@ export class GameState {
     this.player = new Player();
     this.opponents = createOpponents();
     this.platforms = createPlatforms();
+    this.pot = new Pot();
   }
 
   calcInteractions() {
@@ -50,8 +55,11 @@ export class GameState {
       calcPlatColl(platform, this.player);
     });
 
+    debounceLog(this.scrollOffset.toString());
+
     updateWithPlayer(this.keys, this.player, this.scrollOffset, this.platforms);
     updateWithPlayer(this.keys, this.player, this.scrollOffset, this.opponents);
+    updateWithPlayer(this.keys, this.player, this.scrollOffset, [this.pot]);
 
     const remove = updateLiveStatus(this.player, this.opponents);
     if (remove !== undefined) {

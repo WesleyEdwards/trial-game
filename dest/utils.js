@@ -18,12 +18,13 @@ export function createOpponents() {
         .map(() => new Opponent(generateRandomInt(500, END_POS)));
 }
 export function drawEverything(context, gameState) {
-    const { platforms, opponents, player } = gameState;
+    const { platforms, opponents, player, pot } = gameState;
     context.fillStyle = "white";
     context.fillRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
     platforms.forEach((plat) => plat.draw(context));
     opponents.forEach((opponent) => opponent.draw(context));
     player.draw(context);
+    pot.draw(context);
 }
 export function calculateInteractions(gameState) {
     gameState.calcInteractions();

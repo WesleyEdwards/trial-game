@@ -23,10 +23,11 @@ export function setupGame(enterGameLoop: () => void): HTMLCanvasElement {
 
 export function handleLose(context: CanvasRenderingContext2D) {
   context.clearRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
-  context.font = "30px Arial";
+  context.font = "30px monospace";
+  context.fillStyle = "green";
   context.fillText(
-    "You lose! :(",
-    MAX_CANVAS_WIDTH / 2 - 60,
+    "You lose. Your efforts are much appreciated.",
+    MAX_CANVAS_WIDTH / 2 - 400,
     MAX_CANVAS_HEIGHT / 2
   );
   const button = document.getElementById("play-game");

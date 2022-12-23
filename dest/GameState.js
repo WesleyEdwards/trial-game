@@ -1,7 +1,8 @@
 import { INCREMENT_VALUE, initialKeyStatus } from "./constants.js";
 import { calcPlatColl, checkIfCaught, updateLiveStatus, updateWithPlayer, } from "./GameStateFunctions.js";
 import Player from "./Player.js";
-import { createOpponents, createPlatforms } from "./utils.js";
+import { Pot } from "./Pot.js";
+import { createOpponents, createPlatforms, debounceLog } from "./utils.js";
 export class GameState {
     constructor() {
         this.scrollOffset = 0;
@@ -10,6 +11,7 @@ export class GameState {
         this.player = new Player();
         this.opponents = createOpponents();
         this.platforms = createPlatforms();
+        this.pot = new Pot();
     }
     incrementScrollOffset(num) {
         this.scrollOffset -= num;
@@ -23,14 +25,17 @@ export class GameState {
         this.player = new Player();
         this.opponents = createOpponents();
         this.platforms = createPlatforms();
+        this.pot = new Pot();
     }
     calcInteractions() {
         this.platforms.forEach((platform) => {
             this.opponents.forEach((opp) => calcPlatColl(platform, opp));
             calcPlatColl(platform, this.player);
         });
+        debounceLog(this.scrollOffset.toString());
         updateWithPlayer(this.keys, this.player, this.scrollOffset, this.platforms);
         updateWithPlayer(this.keys, this.player, this.scrollOffset, this.opponents);
+        updateWithPlayer(this.keys, this.player, this.scrollOffset, [this.pot]);
         const remove = updateLiveStatus(this.player, this.opponents);
         if (remove !== undefined) {
             this.opponents.splice(this.opponents.indexOf(remove), 1);

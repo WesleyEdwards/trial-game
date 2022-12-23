@@ -33,7 +33,7 @@ export function drawEverything(
   context: CanvasRenderingContext2D,
   gameState: GameState
 ) {
-  const { platforms, opponents, player } = gameState;
+  const { platforms, opponents, player, pot } = gameState;
 
   context.fillStyle = "white";
   context.fillRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
@@ -41,6 +41,8 @@ export function drawEverything(
   platforms.forEach((plat) => plat.draw(context));
   opponents.forEach((opponent) => opponent.draw(context));
   player.draw(context);
+
+  pot.draw(context);
 }
 
 export function calculateInteractions(gameState: GameState) {

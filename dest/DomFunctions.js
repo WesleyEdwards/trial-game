@@ -16,8 +16,9 @@ export function setupGame(enterGameLoop) {
 }
 export function handleLose(context) {
     context.clearRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
-    context.font = "30px Arial";
-    context.fillText("You lose! :(", MAX_CANVAS_WIDTH / 2 - 60, MAX_CANVAS_HEIGHT / 2);
+    context.font = "30px monospace";
+    context.fillStyle = "green";
+    context.fillText("You lose. Your efforts are much appreciated.", MAX_CANVAS_WIDTH / 2 - 400, MAX_CANVAS_HEIGHT / 2);
     const button = document.getElementById("play-game");
     if (button) {
         button.removeAttribute("disabled");

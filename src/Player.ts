@@ -1,6 +1,7 @@
 import { MAX_CANVAS_HEIGHT, GRAVITY, playerConstants } from "./constants.js";
 import { makeImage } from "./drawingUtils.js";
 import { Coordinates, Keys, PlayerAction } from "./models.js";
+import { debounceLog } from "./utils.js";
 
 const { shankTime, shankCoolDown, moveSpeed, radius } = playerConstants;
 

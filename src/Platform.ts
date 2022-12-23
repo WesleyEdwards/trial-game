@@ -1,5 +1,5 @@
 import { generateRandomInt } from "./utils.js";
-import { MAX_WIDTH, PLAT_FREQUENCY } from "./constants.js";
+import { PLAT_FREQUENCY } from "./constants.js";
 import { Coordinates } from "./models.js";
 
 const PLAT_Y_MIN = 100;

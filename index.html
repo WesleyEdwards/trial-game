@@ -14,7 +14,7 @@
       align-items: center;
       height: 100vh;
     }
-    .play-game {
+    #play-game {
       background-color: #a75fff;
       font-size: 1rem;
       padding: 1rem 2rem;
@@ -22,6 +22,13 @@
       border-radius: 0.5rem;
       border: none;
       cursor: pointer;
+      font-family: "Courier New", Courier, monospace;
+    }
+    #title-text {
+      color: green;
+      font-size: 3rem;
+      margin: 1rem 2rem;
+      font-family: "Courier New", Courier, monospace;
     }
   </style>
 
@@ -33,9 +40,9 @@
   </head>
   <body>
     <div class="container" id="main-div">
-      <h1 style="color: green">Mate Champion</h1>
+      <h1 id="title-text">Mate Champion</h1>
       <canvas id="canvas"></canvas>
-      <button class="play-game" id="play-game">Play Game</button>
+      <button id="play-game">Play Game</button>
       <script src="./dest/main.js" type="module"></script>
     </div>
   </body>
