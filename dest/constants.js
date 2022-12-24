@@ -24,7 +24,7 @@ export const initialKeyStatus = {
 };
 export const emptyStats = {
     score: 0,
-    lives: 3,
+    lives: 1,
     level: 1,
 };
 export const listOfColors = [

@@ -34,7 +34,7 @@ export const initialKeyStatus: Record<keyof Keys, boolean> = {
 
 export const emptyStats = {
   score: 0,
-  lives: 3,
+  lives: 1,
   level: 1,
 };
 

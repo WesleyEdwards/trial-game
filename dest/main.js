@@ -1,20 +1,20 @@
 import { GameState } from "./GameState.js";
-import { addEventListeners, getStatsHTML, handleLose, setupGame, } from "./DomFunctions.js";
+import { addEventListeners, getStatsHTML, handleLose, handleStartPlaying, setupGame, } from "./DomFunctions.js";
 const statsHTML = getStatsHTML();
+const instructions = document.getElementById("instructions");
 const gameState = new GameState(statsHTML);
 const enterGameLoop = () => {
+    handleStartPlaying(context, instructions);
     gameState.enterGame();
     loop();
 };
 const canvas = setupGame(enterGameLoop);
 const context = canvas.getContext("2d");
-if (!context)
-    throw new Error("Context is null");
 let requestId = undefined;
 function loop() {
     requestId = undefined;
     if (gameState.winState === "lose") {
-        handleLose(context);
+        handleLose(context, instructions);
         stop();
         return;
     }

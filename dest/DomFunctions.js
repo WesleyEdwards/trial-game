@@ -13,6 +13,7 @@ export function setupGame(enterGameLoop) {
     const canvas = document.getElementById("canvas");
     const playGameButton = document.getElementById("play-game");
     const container = document.getElementById("main-div");
+    canvas.width = MAX_CANVAS_WIDTH;
     if (playGameButton && container) {
         playGameButton.addEventListener("click", () => {
             enterGameLoop();
@@ -20,18 +21,27 @@ export function setupGame(enterGameLoop) {
         });
         container.appendChild(playGameButton);
     }
-    canvas.width = MAX_CANVAS_WIDTH;
-    canvas.height = MAX_CANVAS_HEIGHT;
     return canvas;
 }
-export function handleLose(context) {
-    context.clearRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
-    context.font = "30px monospace";
-    context.fillStyle = "green";
-    context.fillText("You lose. Your efforts are much appreciated.", MAX_CANVAS_WIDTH / 2 - 400, MAX_CANVAS_HEIGHT / 2);
-    const button = document.getElementById("play-game");
-    if (button) {
-        button.removeAttribute("disabled");
+export function handleStartPlaying(context, instructions) {
+    const { canvas } = context;
+    canvas.width = MAX_CANVAS_WIDTH;
+    canvas.height = MAX_CANVAS_HEIGHT;
+    instructions.innerHTML = "";
+}
+export function handleLose(context, instructions) {
+    context.canvas.height = 0;
+    const highScore = true;
+    if (highScore) {
+        instructions.innerHTML = `<h2>Game Over!</h2><p>You got a high score!<br />To receive credit, Enter your name:<div id="submit-box"></p><input type="text" id="name-input" /><button type="submit" id="submit-score">Submit</button></div>`;
+        const name = document.getElementById("name-input");
+        const submit = document.getElementById("submit-score");
+        if (submit) {
+            submit.addEventListener("click", () => handleSubmitName(name.value).then(() => displayScores(instructions)));
+        }
+    }
+    else {
+        displayScores(instructions);
     }
 }
 export function addEventListeners(gameState) {
@@ -56,3 +66,24 @@ export function addEventListeners(gameState) {
             gameState.keys.space = false;
     });
 }
+function generateScoresHTML() {
+    const scores = [
+        { name: "John Doe", score: 100 },
+        { name: "Jane Doe", score: 90 },
+        { name: "Joe Doe", score: 80 },
+        { name: "Jill Doe", score: 70 },
+        { name: "Jack Doe", score: 60 },
+    ];
+    return `<h2>High Scores:</h2><p>1 - ${scores[0].name} (${scores[0].score})</p><p>2 - ${scores[1].name} (${scores[1].score})</p><p>3 - ${scores[2].name} (${scores[2].score})</p><p>4 - ${scores[3].name} (${scores[3].score})</p><p>5 - ${scores[4].name} (${scores[4].score})</p>`;
+}
+function displayScores(instructions) {
+    instructions.innerHTML = generateScoresHTML();
+    const button = document.getElementById("play-game");
+    if (button) {
+        button.removeAttribute("disabled");
+    }
+}
+const handleSubmitName = (name) => {
+    console.log(name);
+    return Promise.resolve();
+};
