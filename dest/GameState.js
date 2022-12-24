@@ -4,15 +4,16 @@ import Player from "./Player.js";
 import { Pot } from "./Pot.js";
 import { createOpponents, createPlatforms } from "./utils.js";
 export class GameState {
-    constructor() {
+    constructor(statsHTML) {
         this.scrollOffset = 0;
         this.winState = "playing";
         this.keys = initialKeyStatus;
         this.player = new Player();
-        this.opponents = createOpponents();
-        this.platforms = createPlatforms();
+        this.opponents = createOpponents(1);
+        this.platforms = createPlatforms(1);
         this.pot = new Pot();
-        this.stats = emptyStats;
+        this.stats = Object.assign({}, emptyStats);
+        this.statsHTML = statsHTML;
     }
     incrementScrollOffset(num) {
         this.scrollOffset -= num;
@@ -21,26 +22,26 @@ export class GameState {
         this.winState = state;
     }
     reset(all) {
+        if (all) {
+            this.stats = Object.assign({}, emptyStats);
+            this.drawStats();
+        }
         this.setGameState("playing");
         this.scrollOffset = 0;
         this.player = new Player();
-        this.opponents = createOpponents();
-        this.platforms = createPlatforms();
+        this.opponents = createOpponents(this.stats.level);
+        this.platforms = createPlatforms(this.stats.level);
         this.pot = new Pot();
-        if (all) {
-            this.stats = emptyStats;
-        }
-    }
-    enterGame() {
-        this.reset(true);
     }
     nextLevel() {
         this.stats.level++;
         this.stats.score += 100;
         this.reset();
+        this.drawStats();
     }
     handleLose() {
         this.setGameState("lose");
+        this.drawStats();
     }
     handleLoseLife() {
         this.stats.lives--;
@@ -48,6 +49,14 @@ export class GameState {
         if (this.stats.lives === 0) {
             this.handleLose();
         }
+    }
+    killOpponent(opp) {
+        this.stats.score += 10;
+        this.opponents.splice(this.opponents.indexOf(opp), 1);
+        this.drawStats();
+    }
+    enterGame() {
+        this.reset(true);
     }
     calcInteractions() {
         this.platforms.forEach((platform) => {
@@ -58,9 +67,7 @@ export class GameState {
         updateWithPlayer(this.keys, this.player, this.scrollOffset, this.opponents);
         updateWithPlayer(this.keys, this.player, this.scrollOffset, [this.pot]);
         const removeOpp = updateLiveStatus(this.player, this.opponents);
-        if (removeOpp !== undefined) {
-            this.opponents.splice(this.opponents.indexOf(removeOpp), 1);
-        }
+        removeOpp && this.killOpponent(removeOpp);
         if (checkIfCaught(this.player, this.opponents)) {
             this.handleLoseLife();
         }
@@ -75,5 +82,13 @@ export class GameState {
             this.scrollOffset > 0) {
             this.incrementScrollOffset(INCREMENT_VALUE);
         }
+    }
+    drawStats() {
+        this.statsHTML.level.innerHTML = `Level: ${this.stats.level}`;
+        this.statsHTML.score.innerHTML = `Score: ${this.stats.score}`;
+        this.statsHTML.lives.innerHTML = `Lives: ${this.stats.lives}`;
+    }
+    getScrollOffset() {
+        return this.scrollOffset;
     }
 }

@@ -3,8 +3,9 @@ export const MAX_CANVAS_HEIGHT = 576;
 export const GRAVITY = 0.65;
 export const PLAT_FREQUENCY = 350;
 export const NUM_PLATFORMS = 30;
-export const NUM_OPPONENTS = 15;
-export const END_POS = 4500;
+export const END_POS = 1000;
+// export const END_POS = 4500;
+export const OPP_PER_LEVEL = 5;
 export const INCREMENT_VALUE = 5;
 // Player
 export const playerConstants = {
@@ -27,3 +28,13 @@ export const emptyStats = {
     lives: 3,
     level: 1,
 };
+export const listOfColors = [
+    "green",
+    "red",
+    "blue",
+    "yellow",
+    "orange",
+    "purple",
+    "pink",
+    "brown",
+];

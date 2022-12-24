@@ -16,14 +16,14 @@ export class Platform {
   height: number;
   color: string;
 
-  constructor(xPos: number, sectionY: PlatPosition) {
+  constructor(xPos: number, sectionY: PlatPosition, color?: string) {
     this.position = {
       x: getXPos(xPos),
       y: getYPos(sectionY),
     };
     this.width = generateRandomInt(PLAT_WIDTH_MIN, PLAT_WIDTH_MAX);
     this.height = 40;
-    this.color = "green";
+    this.color = color ?? "green";
   }
   draw(canvas: CanvasRenderingContext2D) {
     canvas.fillStyle = this.color;

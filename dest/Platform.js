@@ -6,14 +6,14 @@ const PLAT_WIDTH_MIN = 200;
 const PLAT_WIDTH_MAX = 500;
 const TOTAL_HEIGHT = 576;
 export class Platform {
-    constructor(xPos, sectionY) {
+    constructor(xPos, sectionY, color) {
         this.position = {
             x: getXPos(xPos),
             y: getYPos(sectionY),
         };
         this.width = generateRandomInt(PLAT_WIDTH_MIN, PLAT_WIDTH_MAX);
         this.height = 40;
-        this.color = "green";
+        this.color = color !== null && color !== void 0 ? color : "green";
     }
     draw(canvas) {
         canvas.fillStyle = this.color;

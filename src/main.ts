@@ -7,15 +7,6 @@ import { GameState } from "./GameState.js";
 import { addEventListeners, handleLose, setupGame } from "./DomFunctions.js";
 import { StatsHTML } from "./models.js";
 
-const gameState = new GameState();
-
-const enterGameLoop = () => {
-  gameState.enterGame();
-  loop();
-};
-
-const canvas = setupGame(enterGameLoop);
-const context = canvas.getContext("2d");
 const levelStats = document.getElementById("level-stats");
 const scoreStats = document.getElementById("score-stats");
 const livesStats = document.getElementById("lives-stats");
@@ -25,6 +16,17 @@ const statsDiv: StatsHTML = {
   score: scoreStats!!,
   lives: livesStats!!,
 };
+
+const gameState = new GameState(statsDiv);
+
+const enterGameLoop = () => {
+  console.log("entering game loop");
+  gameState.enterGame();
+  loop();
+};
+
+const canvas = setupGame(enterGameLoop);
+const context = canvas.getContext("2d");
 
 if (!context) throw new Error("Context is null");
 
@@ -41,7 +43,7 @@ function loop() {
 
   updateEverything(gameState);
   calculateInteractions(gameState);
-  drawEverything(context!!, gameState, statsDiv);
+  drawEverything(context!!, gameState);
 
   start();
 }
