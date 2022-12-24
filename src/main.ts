@@ -1,26 +1,16 @@
-import {
-  calculateInteractions,
-  drawEverything,
-  updateEverything,
-} from "./utils.js";
+import { drawEverything } from "./utils.js";
 import { GameState } from "./GameState.js";
-import { addEventListeners, handleLose, setupGame } from "./DomFunctions.js";
-import { StatsHTML } from "./models.js";
+import {
+  addEventListeners,
+  getStatsHTML,
+  handleLose,
+  setupGame,
+} from "./DomFunctions.js";
 
-const levelStats = document.getElementById("level-stats");
-const scoreStats = document.getElementById("score-stats");
-const livesStats = document.getElementById("lives-stats");
-
-const statsDiv: StatsHTML = {
-  level: levelStats!!,
-  score: scoreStats!!,
-  lives: livesStats!!,
-};
-
-const gameState = new GameState(statsDiv);
+const statsHTML = getStatsHTML();
+const gameState = new GameState(statsHTML);
 
 const enterGameLoop = () => {
-  console.log("entering game loop");
   gameState.enterGame();
   loop();
 };
@@ -41,9 +31,9 @@ function loop() {
     return;
   }
 
-  updateEverything(gameState);
-  calculateInteractions(gameState);
-  drawEverything(context!!, gameState);
+  gameState.updateEverything();
+  gameState.calcInteractions();
+  gameState.drawEverything(context!!);
 
   start();
 }

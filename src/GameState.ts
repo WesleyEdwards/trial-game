@@ -1,8 +1,8 @@
 import { emptyStats, INCREMENT_VALUE, initialKeyStatus } from "./constants.js";
-import { makeImage } from "./drawingUtils.js";
 import {
   calcPlatColl,
   checkIfCaught,
+  drawComponents,
   updateLiveStatus,
   updateWithPlayer,
 } from "./GameStateFunctions.js";
@@ -16,15 +16,16 @@ import { createOpponents, createPlatforms } from "./utils.js";
 type winState = "win" | "lose" | "playing";
 
 export class GameState {
-  private scrollOffset: number;
   winState: winState;
   player: Player;
   platforms: Platform[];
   opponents: Opponent[];
   keys: Keys;
   pot: Pot;
+  private scrollOffset: number;
   private stats: GameStats;
   private statsHTML: StatsHTML;
+
   constructor(statsHTML: StatsHTML) {
     this.scrollOffset = 0;
     this.winState = "playing";
@@ -48,7 +49,6 @@ export class GameState {
   private reset(all?: boolean) {
     if (all) {
       this.stats = { ...emptyStats };
-      this.drawStats();
     }
     this.setGameState("playing");
     this.scrollOffset = 0;
@@ -56,6 +56,7 @@ export class GameState {
     this.opponents = createOpponents(this.stats.level);
     this.platforms = createPlatforms(this.stats.level);
     this.pot = new Pot();
+    this.drawStats();
   }
 
   private nextLevel() {
@@ -67,7 +68,6 @@ export class GameState {
 
   private handleLose() {
     this.setGameState("lose");
-    this.drawStats();
   }
 
   private handleLoseLife() {
@@ -85,6 +85,21 @@ export class GameState {
 
   enterGame() {
     this.reset(true);
+  }
+
+  updateEverything() {
+    this.player.update(this.keys, this.getScrollOffset());
+    this.opponents.forEach((opponent) => opponent.update());
+  }
+
+  drawEverything(context: CanvasRenderingContext2D) {
+    drawComponents(
+      context,
+      this.platforms,
+      this.opponents,
+      this.player,
+      this.pot
+    );
   }
 
   calcInteractions() {
@@ -119,11 +134,13 @@ export class GameState {
       this.incrementScrollOffset(INCREMENT_VALUE);
     }
   }
+
   drawStats() {
     this.statsHTML.level.innerHTML = `Level: ${this.stats.level}`;
     this.statsHTML.score.innerHTML = `Score: ${this.stats.score}`;
     this.statsHTML.lives.innerHTML = `Lives: ${this.stats.lives}`;
   }
+
   getScrollOffset() {
     return this.scrollOffset;
   }

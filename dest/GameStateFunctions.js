@@ -1,4 +1,4 @@
-import { INCREMENT_VALUE, playerConstants } from "./constants.js";
+import { INCREMENT_VALUE, MAX_CANVAS_HEIGHT, MAX_CANVAS_WIDTH, playerConstants, } from "./constants.js";
 export function updateWithPlayer(keys, player, scrollOffset, objects) {
     if (keys.right && player.velocity.x === 0) {
         objects.forEach((object) => {
@@ -43,9 +43,17 @@ export function updateLiveStatus(player, opponents) {
     return opponents.find((opp) => {
         const distBetween = Math.sqrt(Math.pow(opp.position.x - player.position.x, 2) +
             Math.pow(opp.position.y - player.position.y, 2));
-        if (distBetween < playerConstants.radius * 3 && knifeStatus(player, opp)) {
+        if (distBetween < playerConstants.radius * 4 && knifeStatus(player, opp)) {
             return opp;
         }
         return undefined;
     });
+}
+export function drawComponents(context, platforms, opponents, player, pot) {
+    context.fillStyle = "white";
+    context.fillRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
+    platforms.forEach((plat) => plat.draw(context));
+    opponents.forEach((opponent) => opponent.draw(context));
+    player.draw(context);
+    pot.draw(context);
 }

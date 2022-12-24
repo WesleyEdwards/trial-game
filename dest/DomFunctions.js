@@ -1,4 +1,14 @@
 import { MAX_CANVAS_HEIGHT, MAX_CANVAS_WIDTH } from "./constants.js";
+export function getStatsHTML() {
+    const levelStats = document.getElementById("level-stats");
+    const scoreStats = document.getElementById("score-stats");
+    const livesStats = document.getElementById("lives-stats");
+    return {
+        level: levelStats,
+        score: scoreStats,
+        lives: livesStats,
+    };
+}
 export function setupGame(enterGameLoop) {
     const canvas = document.getElementById("canvas");
     const playGameButton = document.getElementById("play-game");

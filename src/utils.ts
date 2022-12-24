@@ -3,18 +3,13 @@ import {
   listOfColors,
   MAX_CANVAS_HEIGHT,
   MAX_CANVAS_WIDTH,
-  OPP_PER_LEVEL,
+  oppPerLevel,
   NUM_PLATFORMS,
+  oppSpeedBase,
 } from "./constants.js";
 import { GameState } from "./GameState.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
-
-export function updateEverything(gameState: GameState) {
-  const { player, opponents, keys } = gameState;
-  player.update(keys, gameState.getScrollOffset());
-  opponents.forEach((opponent) => opponent.update());
-}
 
 export function createPlatforms(level: number): Platform[] {
   const platColor = listOfColors[(level - 1) % listOfColors.length];
@@ -25,9 +20,10 @@ export function createPlatforms(level: number): Platform[] {
 }
 
 export function createOpponents(level: number): Opponent[] {
-  return new Array(OPP_PER_LEVEL * level)
+  const moveSpeed = oppSpeedBase + level * 0.3;
+  return new Array(oppPerLevel * level)
     .fill(null)
-    .map(() => new Opponent(generateRandomInt(500, END_POS)));
+    .map(() => new Opponent(generateRandomInt(500, END_POS), moveSpeed));
 }
 
 export function drawEverything(
@@ -44,10 +40,6 @@ export function drawEverything(
   player.draw(context);
 
   pot.draw(context);
-}
-
-export function calculateInteractions(gameState: GameState) {
-  gameState.calcInteractions();
 }
 
 export function generateRandomInt(min: number, max: number): number {

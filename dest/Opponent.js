@@ -1,9 +1,8 @@
-import { GRAVITY, MAX_CANVAS_HEIGHT, opponentConstants } from "./constants.js";
+import { GRAVITY, MAX_CANVAS_HEIGHT } from "./constants.js";
 import { makeImage } from "./drawingUtils.js";
 import { randomOutOf } from "./utils.js";
-const { moveSpeed } = opponentConstants;
 export class Opponent {
-    constructor(xPos) {
+    constructor(xPos, moveSpeed) {
         this.position = { x: xPos, y: 100 };
         this.velocity = { x: moveSpeed, y: 0 };
         this.width = 50;

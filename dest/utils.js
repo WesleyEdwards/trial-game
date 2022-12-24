@@ -1,11 +1,6 @@
-import { END_POS, listOfColors, MAX_CANVAS_HEIGHT, MAX_CANVAS_WIDTH, OPP_PER_LEVEL, NUM_PLATFORMS, } from "./constants.js";
+import { END_POS, listOfColors, MAX_CANVAS_HEIGHT, MAX_CANVAS_WIDTH, oppPerLevel, NUM_PLATFORMS, oppSpeedBase, } from "./constants.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
-export function updateEverything(gameState) {
-    const { player, opponents, keys } = gameState;
-    player.update(keys, gameState.getScrollOffset());
-    opponents.forEach((opponent) => opponent.update());
-}
 export function createPlatforms(level) {
     const platColor = listOfColors[(level - 1) % listOfColors.length];
     return new Array(NUM_PLATFORMS).fill(null).map((_, i) => {
@@ -14,9 +9,10 @@ export function createPlatforms(level) {
     });
 }
 export function createOpponents(level) {
-    return new Array(OPP_PER_LEVEL * level)
+    const moveSpeed = oppSpeedBase + level * 0.3;
+    return new Array(oppPerLevel * level)
         .fill(null)
-        .map(() => new Opponent(generateRandomInt(500, END_POS)));
+        .map(() => new Opponent(generateRandomInt(500, END_POS), moveSpeed));
 }
 export function drawEverything(context, gameState) {
     const { platforms, opponents, player, pot } = gameState;
@@ -26,9 +22,6 @@ export function drawEverything(context, gameState) {
     opponents.forEach((opponent) => opponent.draw(context));
     player.draw(context);
     pot.draw(context);
-}
-export function calculateInteractions(gameState) {
-    gameState.calcInteractions();
 }
 export function generateRandomInt(min, max) {
     return Math.floor(min + Math.random() * (max - min + 1));

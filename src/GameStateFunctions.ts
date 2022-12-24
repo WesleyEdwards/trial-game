@@ -1,9 +1,14 @@
-import { INCREMENT_VALUE, playerConstants } from "./constants.js";
-import { GameState } from "./GameState.js";
+import {
+  INCREMENT_VALUE,
+  MAX_CANVAS_HEIGHT,
+  MAX_CANVAS_WIDTH,
+  playerConstants,
+} from "./constants.js";
 import { Character, hasPosition, Keys } from "./models.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
 import Player from "./Player.js";
+import { Pot } from "./Pot.js";
 
 export function updateWithPlayer<T extends hasPosition>(
   keys: Keys,
@@ -67,9 +72,26 @@ export function updateLiveStatus(
       Math.pow(opp.position.x - player.position.x, 2) +
         Math.pow(opp.position.y - player.position.y, 2)
     );
-    if (distBetween < playerConstants.radius * 3 && knifeStatus(player, opp)) {
+    if (distBetween < playerConstants.radius * 4 && knifeStatus(player, opp)) {
       return opp;
     }
     return undefined;
   });
+}
+
+export function drawComponents(
+  context: CanvasRenderingContext2D,
+  platforms: Platform[],
+  opponents: Opponent[],
+  player: Player,
+  pot: Pot
+) {
+  context.fillStyle = "white";
+  context.fillRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
+
+  platforms.forEach((plat) => plat.draw(context));
+  opponents.forEach((opponent) => opponent.draw(context));
+  player.draw(context);
+
+  pot.draw(context);
 }

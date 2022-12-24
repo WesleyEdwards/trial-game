@@ -1,5 +1,5 @@
 import { emptyStats, INCREMENT_VALUE, initialKeyStatus } from "./constants.js";
-import { calcPlatColl, checkIfCaught, updateLiveStatus, updateWithPlayer, } from "./GameStateFunctions.js";
+import { calcPlatColl, checkIfCaught, drawComponents, updateLiveStatus, updateWithPlayer, } from "./GameStateFunctions.js";
 import Player from "./Player.js";
 import { Pot } from "./Pot.js";
 import { createOpponents, createPlatforms } from "./utils.js";
@@ -24,7 +24,6 @@ export class GameState {
     reset(all) {
         if (all) {
             this.stats = Object.assign({}, emptyStats);
-            this.drawStats();
         }
         this.setGameState("playing");
         this.scrollOffset = 0;
@@ -32,6 +31,7 @@ export class GameState {
         this.opponents = createOpponents(this.stats.level);
         this.platforms = createPlatforms(this.stats.level);
         this.pot = new Pot();
+        this.drawStats();
     }
     nextLevel() {
         this.stats.level++;
@@ -41,7 +41,6 @@ export class GameState {
     }
     handleLose() {
         this.setGameState("lose");
-        this.drawStats();
     }
     handleLoseLife() {
         this.stats.lives--;
@@ -57,6 +56,13 @@ export class GameState {
     }
     enterGame() {
         this.reset(true);
+    }
+    updateEverything() {
+        this.player.update(this.keys, this.getScrollOffset());
+        this.opponents.forEach((opponent) => opponent.update());
+    }
+    drawEverything(context) {
+        drawComponents(context, this.platforms, this.opponents, this.player, this.pot);
     }
     calcInteractions() {
         this.platforms.forEach((platform) => {
