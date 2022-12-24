@@ -30,3 +30,9 @@ export const initialKeyStatus: Record<keyof Keys, boolean> = {
   left: false,
   space: false,
 };
+
+export const emptyStats = {
+  score: 0,
+  lives: 3,
+  level: 1,
+};

@@ -30,3 +30,15 @@ export interface Keys {
   left: boolean;
   space: boolean;
 }
+
+export interface GameStats {
+  level: number;
+  score: number;
+  lives: number;
+}
+
+export interface StatsHTML {
+  level: HTMLElement;
+  lives: HTMLElement;
+  score: HTMLElement;
+}

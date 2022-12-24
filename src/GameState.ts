@@ -1,4 +1,4 @@
-import { INCREMENT_VALUE, initialKeyStatus } from "./constants.js";
+import { emptyStats, INCREMENT_VALUE, initialKeyStatus } from "./constants.js";
 import { makeImage } from "./drawingUtils.js";
 import {
   calcPlatColl,
@@ -6,12 +6,12 @@ import {
   updateLiveStatus,
   updateWithPlayer,
 } from "./GameStateFunctions.js";
-import { Keys } from "./models.js";
+import { GameStats, Keys } from "./models.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
 import Player from "./Player.js";
 import { Pot } from "./Pot.js";
-import { createOpponents, createPlatforms, debounceLog } from "./utils.js";
+import { createOpponents, createPlatforms } from "./utils.js";
 
 type winState = "win" | "lose" | "playing";
 
@@ -23,6 +23,7 @@ export class GameState {
   opponents: Opponent[];
   keys: Keys;
   pot: Pot;
+  stats: GameStats;
   constructor() {
     this.scrollOffset = 0;
     this.winState = "playing";
@@ -31,22 +32,48 @@ export class GameState {
     this.opponents = createOpponents();
     this.platforms = createPlatforms();
     this.pot = new Pot();
+    this.stats = emptyStats;
   }
 
-  incrementScrollOffset(num: number) {
+  private incrementScrollOffset(num: number) {
     this.scrollOffset -= num;
   }
-  setGameState(state: winState) {
+  private setGameState(state: winState) {
     this.winState = state;
   }
 
-  reset() {
+  private reset(all?: boolean) {
     this.setGameState("playing");
     this.scrollOffset = 0;
     this.player = new Player();
     this.opponents = createOpponents();
     this.platforms = createPlatforms();
     this.pot = new Pot();
+    if (all) {
+      this.stats = emptyStats;
+    }
+  }
+
+  enterGame() {
+    this.reset(true);
+  }
+
+  nextLevel() {
+    this.stats.level++;
+    this.stats.score += 100;
+    this.reset();
+  }
+
+  private handleLose() {
+    this.setGameState("lose");
+  }
+
+  handleLoseLife() {
+    this.stats.lives--;
+    this.reset();
+    if (this.stats.lives === 0) {
+      this.handleLose();
+    }
   }
 
   calcInteractions() {
@@ -55,19 +82,21 @@ export class GameState {
       calcPlatColl(platform, this.player);
     });
 
-    debounceLog(this.scrollOffset.toString());
-
     updateWithPlayer(this.keys, this.player, this.scrollOffset, this.platforms);
     updateWithPlayer(this.keys, this.player, this.scrollOffset, this.opponents);
     updateWithPlayer(this.keys, this.player, this.scrollOffset, [this.pot]);
 
-    const remove = updateLiveStatus(this.player, this.opponents);
-    if (remove !== undefined) {
-      this.opponents.splice(this.opponents.indexOf(remove), 1);
+    const removeOpp = updateLiveStatus(this.player, this.opponents);
+    if (removeOpp !== undefined) {
+      this.opponents.splice(this.opponents.indexOf(removeOpp), 1);
     }
 
     if (checkIfCaught(this.player, this.opponents)) {
-      this.setGameState("lose");
+      this.handleLoseLife();
+    }
+
+    if (this.player.position.x > this.pot.position.x) {
+      this.nextLevel();
     }
 
     if (this.keys.right && this.player.velocity.x === 0) {

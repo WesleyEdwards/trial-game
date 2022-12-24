@@ -4,7 +4,6 @@ import { Character, hasPosition, Keys } from "./models.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
 import Player from "./Player.js";
-import { debounceLog } from "./utils.js";
 
 export function updateWithPlayer<T extends hasPosition>(
   keys: Keys,

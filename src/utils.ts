@@ -1,12 +1,12 @@
 import {
   END_POS,
-  INCREMENT_VALUE,
   MAX_CANVAS_HEIGHT,
   MAX_CANVAS_WIDTH,
   NUM_OPPONENTS,
   NUM_PLATFORMS,
 } from "./constants.js";
 import { GameState } from "./GameState.js";
+import { StatsHTML } from "./models.js";
 import { Opponent } from "./Opponent.js";
 import { Platform } from "./Platform.js";
 
@@ -31,9 +31,10 @@ export function createOpponents(): Opponent[] {
 
 export function drawEverything(
   context: CanvasRenderingContext2D,
-  gameState: GameState
+  gameState: GameState,
+  statsHTML: StatsHTML
 ) {
-  const { platforms, opponents, player, pot } = gameState;
+  const { stats, platforms, opponents, player, pot } = gameState;
 
   context.fillStyle = "white";
   context.fillRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
@@ -43,6 +44,10 @@ export function drawEverything(
   player.draw(context);
 
   pot.draw(context);
+
+  statsHTML.level.innerHTML = `Level: ${stats.level}`;
+  statsHTML.score.innerHTML = `Score: ${stats.score}`;
+  statsHTML.lives.innerHTML = `Lives: ${stats.lives}`;
 }
 
 export function calculateInteractions(gameState: GameState) {
