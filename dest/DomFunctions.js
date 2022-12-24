@@ -1,4 +1,14 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { MAX_CANVAS_HEIGHT, MAX_CANVAS_WIDTH } from "./constants.js";
+import { fetchPlayerScores, handleSubmitName } from "./FirebaseHelpers.js";
 export function getStatsHTML() {
     const levelStats = document.getElementById("level-stats");
     const scoreStats = document.getElementById("score-stats");
@@ -67,23 +77,17 @@ export function addEventListeners(gameState) {
     });
 }
 function generateScoresHTML() {
-    const scores = [
-        { name: "John Doe", score: 100 },
-        { name: "Jane Doe", score: 90 },
-        { name: "Joe Doe", score: 80 },
-        { name: "Jill Doe", score: 70 },
-        { name: "Jack Doe", score: 60 },
-    ];
-    return `<h2>High Scores:</h2><p>1 - ${scores[0].name} (${scores[0].score})</p><p>2 - ${scores[1].name} (${scores[1].score})</p><p>3 - ${scores[2].name} (${scores[2].score})</p><p>4 - ${scores[3].name} (${scores[3].score})</p><p>5 - ${scores[4].name} (${scores[4].score})</p>`;
+    return __awaiter(this, void 0, void 0, function* () {
+        const scores = yield fetchPlayerScores();
+        return `<h2>High Scores:</h2><p>1 - ${scores[0].name} (${scores[0].score})</p><p>2 - ${scores[1].name} (${scores[1].score})</p><p>3 - ${scores[2].name} (${scores[2].score})</p><p>4 - ${scores[3].name} (${scores[3].score})</p><p>5 - ${scores[4].name} (${scores[4].score})</p>`;
+    });
 }
 function displayScores(instructions) {
-    instructions.innerHTML = generateScoresHTML();
     const button = document.getElementById("play-game");
     if (button) {
         button.removeAttribute("disabled");
     }
+    generateScoresHTML().then((html) => {
+        instructions.innerHTML = html;
+    });
 }
-const handleSubmitName = (name) => {
-    console.log(name);
-    return Promise.resolve();
-};

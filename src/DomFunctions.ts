@@ -1,4 +1,5 @@
 import { MAX_CANVAS_HEIGHT, MAX_CANVAS_WIDTH } from "./constants.js";
+import { fetchPlayerScores, handleSubmitName } from "./FirebaseHelpers.js";
 import { GameState } from "./GameState.js";
 import { StatsHTML } from "./models.js";
 
@@ -80,32 +81,17 @@ export function addEventListeners(gameState: GameState) {
   });
 }
 
-interface PlayerScore {
-  name: string;
-  score: number;
-}
-
-function generateScoresHTML(): string {
-  const scores: PlayerScore[] = [
-    { name: "John Doe", score: 100 },
-    { name: "Jane Doe", score: 90 },
-    { name: "Joe Doe", score: 80 },
-    { name: "Jill Doe", score: 70 },
-    { name: "Jack Doe", score: 60 },
-  ];
-
+async function generateScoresHTML(): Promise<string> {
+  const scores = await fetchPlayerScores();
   return `<h2>High Scores:</h2><p>1 - ${scores[0].name} (${scores[0].score})</p><p>2 - ${scores[1].name} (${scores[1].score})</p><p>3 - ${scores[2].name} (${scores[2].score})</p><p>4 - ${scores[3].name} (${scores[3].score})</p><p>5 - ${scores[4].name} (${scores[4].score})</p>`;
 }
 
 function displayScores(instructions: HTMLElement) {
-  instructions.innerHTML = generateScoresHTML();
   const button = document.getElementById("play-game");
   if (button) {
     button.removeAttribute("disabled");
   }
+  generateScoresHTML().then((html) => {
+    instructions.innerHTML = html;
+  });
 }
-
-const handleSubmitName = (name: string) => {
-  console.log(name);
-  return Promise.resolve();
-};

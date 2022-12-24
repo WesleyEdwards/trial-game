@@ -42,3 +42,8 @@ export interface StatsHTML {
   lives: HTMLElement;
   score: HTMLElement;
 }
+
+export interface PlayerScore {
+  name: string;
+  score: number;
+}
